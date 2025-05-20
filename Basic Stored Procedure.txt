@@ -1,0 +1,225 @@
+Display name
+
+CREATE PROCEDURE display_name(name TEXT)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+	RAISE NOTICE 'My name is :%', name;
+END
+$$
+;
+	CALL display_name('Prathibha');
+
+
+(ACTIVITY 01) -------------------------------------------------------------------------------------------------------------------------------------
+
+CREATE PROCEDURE add_numbers(num1 INTEGER, num2 INTEGER)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+	result INTEGER;
+BEGIN
+	result := num1 + num2;
+	RAISE NOTICE 'The sum is: %', result;
+END;
+$$;
+ 	call add_numbers(10,5);
+
+
+(ACTIVITY  02) -----------------------------------------------------------------------------------------------------------------------------------
+
+ CREATE PROCEDURE return_full_name(
+	first_name VARCHAR(10),
+ 	last_name VARCHAR(10),
+	OUT full_name VARCHAR(25)
+
+LANGUAGE plpgsql
+AS $$
+BEGIN
+	full_name := first_name || ' ' || last_name;
+END;
+$$;
+CREATE PROCEDURE
+
+DO $$
+	DECLARE result_name VARCHAR(30);
+BEGIN
+	CALL return_full_name('Gangamini','Wickramarathna',result_name)
+	RAISE NOTICE 'Full name is:%', result_name;
+END;
+$$;
+NOTICE:  Full name is:Gangamini Wickramarathna
+DO
+
+
+
+(ACTIVITY  03)--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CREATE PROCEDURE double_value(INOUT salary NUMERIC)
+ LANGUAGE plpgsql
+AS $$
+ BEGIN
+
+    salary := salary * 2;
+END;
+ $$;
+CREATE PROCEDURE
+
+DO $$
+DECLARE
+ 	my_salary NUMERIC := 25000;
+ BEGIN
+ 	CALL double_value(my_salary);
+	RAISE NOTICE 'Doubled salary: %', my_salary;
+ END;
+ $$;
+NOTICE:  Doubled salary: 50000
+DO
+ 
+
+(ACTIVITY  04) -------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ CREATE TABLE products (
+	product_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	name VARCHAR(100),
+	price DECIMAL(10, 2),
+	stock_quantity INT
+ );
+
+ CREATE OR REPLACE PROCEDURE add_product(
+	IN product_name VARCHAR(100),
+	IN product_price DECIMAL(10,2),
+	IN quantity INT)
+LANGUAGE plpgsql
+  AS $$
+BEGIN
+	INSERT INTO products(name,price,quantity)
+	VALUES (product_name,product_price,quantity);
+END;
+
+$$;
+CREATE PROCEDURE
+
+
+(ACTIVITY  05) -----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE PROCEDURE get_product_by_id(IN pid INT)
+LANGUAGE plpgsql
+AS $$
+BEGIN 
+	SELECT name,price,quantity
+	FROM products
+	WHERE product_id = pid;
+END;
+$$;
+
+
+(ACTIVITY  06)  ------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE PROCEDURE update_product_stock( IN pid INT,  IN new_stock INT)
+
+LANGUAGE plpgsql
+AS $$
+BEGIN
+	UPDATE products
+	SET stock_quantity = new_stock
+	WHERE product_id = pid;
+END;
+$$;
+
+
+(ACTIVITY  07)  --------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE PROCEDURE delete_product(IN pid INT)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+	DELETE FROM abxcompany.products
+	WHERE product_id = pid;
+END;
+$$;
+
+
+(ACTIVITY  08)  -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE PROCEDURE abxcompany.calculate_total_stock_value_of_product(
+        IN pid INT
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+	total_value DECIMAL(10,2);
+BEGIN
+        SELECT price * stock_quantity
+        INTO total_value
+        FROM abxcompany.products
+        WHERE product_id = pid;
+
+    RAISE NOTICE 'Total stock value: %', total_value;
+END;
+$$;
+
+
+(ACTIVITY  10)  ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CREATE OR REPLACE PROCEDURE abxcompany.check_stock_level(IN pid INT)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    	stock INT;
+BEGIN
+    	SELECT stock_quantity INTO stock
+    	FROM abxcompany.products
+    	WHERE product_id = pid;
+
+    IF stock <= 10 THEN
+        RAISE NOTICE 'Low stock';
+    ELSIF stock > 10 AND stock <= 55 THEN
+        RAISE NOTICE 'Sufficient stock';
+    ELSE
+        RAISE NOTICE 'High stock';
+    END IF;
+END;
+$$;
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Question12
+
+DO $$
+DECLARE
+    i INT := 1;
+	sum INT :0;
+BEGIN
+    WHILE i < 100 LOOP
+        IF i % 2 = 0 THEN
+           I:= i+1;
+		   con
+        END IF;
+        i := i + 1;
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+Question13
+
+DO $$
+DECLARE
+    i INT := 1;
+	
+BEGIN
+    FOR i IN 1..15 LOOP
+		IF i/3=0 AND i/5=0 THEN	
+			RAISE NOTICE 'FizzBuzz';
+		ELSIF i/3=0 THEN
+			RAISE NOTICE 'Fizz';
+		ELSEIF i/5 =0 THEN 
+			RAISE NOTICE 'Buzz';
+		ELSE
+			RAISE NOTICE '%',i;
+		END IF;
+	END LOOP;
+END;
+$$ LANGUAGE plpgsql;
